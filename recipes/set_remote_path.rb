@@ -21,14 +21,14 @@ if(!node[:omnibus_updater][:version].to_s.include?('-') || node[:omnibus_updater
       !f.scan(/\d+\.\d+\.\d+-\d+\./).empty?
   end
   
-  Chef::Log.warn "################################################"
-  Chef::Log.warn "pkgs_avail: #{pkgs_avail}"
+  Chef::Log.info "################################################"
+  Chef::Log.info "pkgs_avail: #{pkgs_avail}"
 
   unless(node[:omnibus_updater][:version_search])
     searched_ver = pkgs_avail.find_all{|x| x.include?(node[:omnibus_updater][:version]) }.sort.last
 
-    Chef::Log.warn "################################################"
-    Chef::Log.warn "searched_version: #{searched_ver}"
+    Chef::Log.info "################################################"
+    Chef::Log.info "searched_version: #{searched_ver}"
 
     unless(searched_ver)
       raise "Omnibus Updater failed to find a valid version string. Base version requested: #{node[:omnibus_updater][:version]}"
@@ -43,8 +43,8 @@ else
   node.set[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
 end
 
-    Chef::Log.warn "################################################"
-    Chef::Log.warn "full_version: #{node[:omnibus_updater][:full_version]}"
+    Chef::Log.info "################################################"
+    Chef::Log.info "full_version: #{node[:omnibus_updater][:full_version]}"
 
 platform_name = node.platform
 platform_majorversion = ""
@@ -96,9 +96,9 @@ case install_via
 when 'deb'
   if(pkgs_avail)
 
-  Chef::Log.warn "PKG AVAILABLE!!"
-  Chef::Log.warn "PKG AVAILABLE!!"
-  Chef::Log.warn "PKG AVAILABLE!!"
+  Chef::Log.info "PKG AVAILABLE!!"
+  Chef::Log.info "PKG AVAILABLE!!"
+  Chef::Log.info "PKG AVAILABLE!!"
 
     path_name = pkgs_avail.find_all{ |path|
       ver = node[:omnibus_updater][:version] || '.'
@@ -108,9 +108,9 @@ when 'deb'
     }.sort.last
   else
 
-  Chef::Log.warn "PKG NOT AVAILABLE!!"
-  Chef::Log.warn "PKG NOT AVAILABLE!!"
-  Chef::Log.warn "PKG NOT AVAILABLE!!"
+  Chef::Log.info "PKG NOT AVAILABLE!!"
+  Chef::Log.info "PKG NOT AVAILABLE!!"
+  Chef::Log.info "PKG NOT AVAILABLE!!"
 
     kernel_name = ""
     file_name = "chef_#{node[:omnibus_updater][:full_version]}.#{platform_name}.#{platform_version}_"
