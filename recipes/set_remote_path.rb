@@ -20,18 +20,34 @@ if(!node[:omnibus_updater][:version].to_s.include?('-') || node[:omnibus_updater
       !f.include?('server') && (node[:omnibus_updater][:allow_release_clients] || !f.include?('.rc')) &&
       !f.scan(/\d+\.\d+\.\d+-\d+\./).empty?
   end
+  
+  puts "################################################"
+  puts "pkgs_avail:"
+  p pkgs_avail
+
   unless(node[:omnibus_updater][:version_search])
     searched_ver = pkgs_avail.find_all{|x| x.include?(node[:omnibus_updater][:version]) }.sort.last
+
+    puts "################################################"
+    puts "searched_version:"
+    p searched_ver
+
     unless(searched_ver)
       raise "Omnibus Updater failed to find a valid version string. Base version requested: #{node[:omnibus_updater][:version]}"
     else
       node.set[:omnibus_updater][:full_version] = searched_ver.scan(/\d+\.\d+\.\d+-\d+/).first
       node.set[:omnibus_updater][:version] = node[:omnibus_updater][:full_version].sub(/-\d+$/,'')
+
+
     end
   end
 else
   node.set[:omnibus_updater][:full_version] = node[:omnibus_updater][:version]
 end
+
+    puts "################################################"
+    puts "full_version:"
+    p [:omnibus_updater][:full_version]
 
 platform_name = node.platform
 platform_majorversion = ""
@@ -82,6 +98,11 @@ end
 case install_via
 when 'deb'
   if(pkgs_avail)
+
+  put "PKG AVAILABLE!!"
+  put "PKG AVAILABLE!!"
+  put "PKG AVAILABLE!!"
+
     path_name = pkgs_avail.find_all{ |path|
       ver = node[:omnibus_updater][:version] || '.'
       path.include?('.deb') && path.include?(platform_name) && 
@@ -89,6 +110,11 @@ when 'deb'
       path.include?(ver)
     }.sort.last
   else
+
+  put "PKG NOT AVAILABLE!!"
+  put "PKG NOT AVAILABLE!!"
+  put "PKG NOT AVAILABLE!!"
+
     kernel_name = ""
     file_name = "chef_#{node[:omnibus_updater][:full_version]}.#{platform_name}.#{platform_version}_"
     if(node.kernel.machine.include?('64'))
